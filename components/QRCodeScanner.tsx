@@ -245,7 +245,7 @@ const QRCodeScanner = forwardRef<IQRScannerRef, IQRCodeProps>((props, ref) => {
         facing={CameraType.back}
         style={StyleSheet.absoluteFillObject}
         onCameraReady={() => {
-          console.log('web 相机准备完毕')
+          console.log('web 相机准备完毕', webEnable)
           setIsReady(true);
           if (Platform.OS === "web" && !webEnable) {
             startCamera()
