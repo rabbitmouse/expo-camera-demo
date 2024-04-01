@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run web_build",
+  "buildCommand": "npm run vercel-build",
   "outputDirectory": "dist",
   "devCommand": "expo",
   "cleanUrls": true,
