@@ -125,9 +125,17 @@ const QRCodeScanner = forwardRef<IQRScannerRef, IQRCodeProps>((props, ref) => {
   });
 
   const startCamera = async (): Promise<boolean> => {
+    console.log('重新启动相机')
+    scanedRef.current = false;
+
     const { status } = await requestPermission();
     const permission = status === "granted";
-    scanedRef.current = false;
+
+    if (Platform.OS === "web") {
+      const webPermisse = await CameraView.isAvailableAsync();
+      setWebEnable(webPermisse);
+      return permission && webPermisse
+    }
 
     return permission;
   };
@@ -228,6 +236,7 @@ const QRCodeScanner = forwardRef<IQRScannerRef, IQRCodeProps>((props, ref) => {
 
   const renderCamera = () => {
     if (Platform.OS === "web" && !webEnable) {
+      console.log('web不支持')
       return null;
     }
     return (
@@ -236,7 +245,11 @@ const QRCodeScanner = forwardRef<IQRScannerRef, IQRCodeProps>((props, ref) => {
         facing={CameraType.back}
         style={StyleSheet.absoluteFillObject}
         onCameraReady={() => {
+          console.log('web 相机准备完毕')
           setIsReady(true);
+          if (Platform.OS === "web" && !webEnable) {
+            startCamera()
+          }
         }}
         onMountError={({ message }) => {
           props?.onScannerError?.({
